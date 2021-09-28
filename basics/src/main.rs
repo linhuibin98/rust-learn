@@ -1,6 +1,6 @@
 mod example;
 
-use example::{multiply, read_file, write_file, reverse_tuple, file_stat};
+use example::{multiply, read_file, write_file, reverse_tuple, file_stat, test_enum};
 
 // 变量声明
 fn test_var() {
@@ -90,4 +90,6 @@ fn main() {
     println!("{:?}", read_file("src/test_file.txt"));
     println!("文件写入：{}", write_file("src/test_file.txt", "\\n你好，Rust"));
     println!("文件信息 {}", file_stat("src/test_file.txt"));
+    println!("测试SFTP");
+    test_enum();
 }
