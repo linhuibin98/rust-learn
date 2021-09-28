@@ -1,6 +1,6 @@
 mod example;
 
-use example::{multiply, read_file, reverse::reverse_tuple};
+use example::{multiply, read_file, write_file, reverse_tuple, file_stat};
 
 // 变量声明
 fn test_var() {
@@ -87,5 +87,7 @@ fn main() {
     let tup = (222, "222");
     println!("{:?}", reverse_tuple(tup));
     test_loop();
-    println!("{:?}", read_file("src/main.rs"));
+    println!("{:?}", read_file("src/test_file.txt"));
+    println!("文件写入：{}", write_file("src/test_file.txt", "\\n你好，Rust"));
+    println!("文件信息 {}", file_stat("src/test_file.txt"));
 }
