@@ -1,6 +1,6 @@
 mod example;
 
-use crate::example::reverse::reverse_tuple;
+use example::{multiply, read_file, reverse::reverse_tuple};
 
 // 变量声明
 fn test_var() {
@@ -29,12 +29,25 @@ fn test_type() {
         age: u32,
         hobby: [&'a str; 3],
     }
+    impl People<'_> {
+       fn new(name: &str, age: u32) -> People {
+            People {
+                name: name,
+                age: age,
+                hobby: ["兴趣1", "兴趣2", "兴趣3"],
+            }
+        }
+        fn get_name(&self) -> &str {
+            self.name
+        }
+    }
+    // 元组结构体
+    #[derive(Debug)]
+    struct Tup(i32, char);
 
-    let ming = People {
-        name: "sdfdf",
-        age: 18,
-        hobby: ["吃饭", "睡觉", "打豆豆"],
-    };
+    let tup_instance = Tup(-123, 's');
+
+    let ming = People::new("lili", 12);
     // 向量（动态数组）
     let mut vec = Vec::from(ming.hobby);
     vec.push("摸鱼");
@@ -47,26 +60,9 @@ fn test_type() {
         "My name is {}, age {}, hobby has {:?}",
         ming.name, ming.age, ming.hobby
     );
+    println!("获取的名字 {}", ming.get_name());
     println!("vec {:#?}", vec);
-}
-
-// test: 打印 99表
-fn print_nine() {
-    println!("打印99乘法表开始");
-    let mut i: u32 = 1;
-    let mut j: u32 = 1;
-    let mut res = String::new();
-    while i <= 9 {
-        if i == j {
-            res.push_str(&format!("{} * {} = {};\n", i, j, i * j));
-            i += 1;
-            j = 1;
-        } else {
-            res.push_str(&format!("{} * {} = {}; ", i, j, i * j));
-            j += 1;
-        }
-    }
-    println!("{}", res);
+    println!("元组结构体 {:?}", tup_instance);
 }
 
 // loop
@@ -86,8 +82,10 @@ fn main() {
     test_var();
     test_type();
     println!("Hello, Rust!");
-    print_nine();
+    // test: 打印 99表
+    multiply();
     let tup = (222, "222");
     println!("{:?}", reverse_tuple(tup));
     test_loop();
+    println!("{:?}", read_file("src/main.rs"));
 }
