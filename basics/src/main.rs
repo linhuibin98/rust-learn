@@ -1,6 +1,16 @@
 mod example;
 
-use example::{multiply, read_file, write_file, reverse_tuple, file_stat, test_enum, test_io, print_rand};
+use example::{
+    multiply, 
+    read_file, 
+    write_file,
+    reverse_tuple, 
+    file_stat, 
+    test_enum, 
+    test_io,
+    print_rand,
+    guess_game
+};
 
 // 变量声明
 fn test_var() {
@@ -94,4 +104,5 @@ fn main() {
     test_enum();
     print_rand();
     test_io();
+    guess_game();
 }
