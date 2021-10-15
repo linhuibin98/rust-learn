@@ -1,9 +1,32 @@
 use std::convert::TryInto;
-use std::sync::{Arc, Mutex, mpsc};
+use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time;
+use std::fmt;
+
+use mpsc::TryRecvError;
 
 extern crate num_cpus;
+
+fn trait_demo() {
+    struct List(Vec<String>);
+
+    impl fmt::Display for List {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            let vec = &self.0;
+            write!(f, "[")?;
+            for (index, val) in vec.iter().enumerate() {
+                if index != 0 {
+                    write!(f, ", ")?;
+                }
+                write!(f, "{}: \"{}\"", index, &val)?;
+            }
+            return write!(f, "]");
+        }
+    }
+    let arr = List(vec!["Hi".to_string(), "Rust".to_string()]);
+    println!("{}", arr);
+}
 
 fn thread_demo() {
     let (sender, receiver) = mpsc::channel();
@@ -14,7 +37,7 @@ fn thread_demo() {
         let sd = sender.clone();
         let handle = thread::spawn(move || {
             thread::sleep(time::Duration::from_secs(id));
-            sd.send(format!("thread id {} send msd", id)).unwrap();
+            sd.send(format!("thread id {} send msg", id)).unwrap();
         });
 
         handles.push(handle);
@@ -27,7 +50,6 @@ fn thread_demo() {
     for handle in handles {
         handle.join().unwrap();
     }
-
 }
 
 // 互斥锁
@@ -61,7 +83,17 @@ fn thread_mutex_mpsc() {
         let receiver = Arc::clone(&receiver);
         let handle = thread::spawn(move || {
             let receiver = receiver.lock().unwrap();
-            println!("thread {} msg is {}", id, receiver.recv().unwrap());
+            match receiver.try_recv() {
+                Ok(r) => {
+                    println!("thread {} msg is {}", id, r);
+                }
+                Err(TryRecvError::Disconnected) => {
+                    println!("thread {} disconnected", id);
+                }
+                Err(TryRecvError::Empty) => {
+                    println!("thread {} empty", id);
+                }
+            }
         });
         handles.push(handle);
     }
@@ -71,9 +103,12 @@ fn thread_mutex_mpsc() {
     for handle in handles {
         handle.join().unwrap();
     }
+
+    drop(sender);
 }
 
 fn main() {
+    trait_demo();
     thread_mutex_mpsc();
     thread_mutex();
     thread_demo();
