@@ -1,21 +1,27 @@
-use actix_web::{web, App, HttpServer, HttpRequest, Responder};
+use actix_web::{web, App, get, HttpServer, HttpRequest, HttpResponse, Responder};
 
-async fn home_control(req: HttpRequest) -> impl Responder {
-    "Home"
+async fn index() -> impl Responder {
+    "Hello"
 }
 
-async fn about_control(req: HttpRequest) -> impl Responder {
+async fn about() -> impl Responder {
     "About"
+}
+
+#[get("/my")]
+async fn my() -> impl Responder {
+    "my"
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .route("/", web::get().to(home_control))
-            .route("/about", web::get().to(about_control))
+            .route("/", web::get().to(index))
+            .route("/about", web::get().to(about))
+            .service(my)
     })
-    .bind("127.0.0.1:8346")?
+    .bind("0.0.0.0:10001")?
     .run()
     .await
 }
