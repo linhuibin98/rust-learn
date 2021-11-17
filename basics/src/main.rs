@@ -12,6 +12,8 @@ use example::{
     guess_game
 };
 
+use std::collections::HashMap;
+
 // 变量声明
 fn test_var() {
     let num: i32 = 123;
@@ -88,21 +90,49 @@ fn test_loop() {
     }
 }
 
+// 计算字符出现字数
+fn calc_count() {
+    let string = "abcdefasdasdawe";
+    let mut res: HashMap<char, i32> = HashMap::new();
+    for c in string.chars() {
+        match res.get_mut(&c) {
+            Option::None => {
+                res.insert(c, 1);
+            }
+            Option::Some(v) => {
+                *v += 1;
+            }
+        };
+    }
+    println!("{:?}", res);
+}
+
+fn calc_count_two() {
+    let string = "abcdefasdasdawe";
+    let mut res: HashMap<char, i32> = HashMap::new();
+    for c in string.chars() {
+        let counter = res.entry(c).or_insert(0);
+        *counter += 1;
+    }
+    println!("{:?}", res);
+}
+
 fn main() {
-    test_var();
-    test_type();
-    println!("Hello, Rust!");
-    // test: 打印 99表
-    multiply();
-    let tup = (222, "222");
-    println!("{:?}", reverse_tuple(tup));
-    test_loop();
-    println!("{:?}", read_file("src/test_file.txt"));
-    println!("文件写入：{}", write_file("src/test_file.txt", "\\n你好，Rust"));
-    println!("文件信息 {}", file_stat("src/test_file.txt"));
-    println!("测试SFTP");
-    test_enum();
-    print_rand();
-    test_io();
-    guess_game();
+    calc_count_two();
+    // test_var();
+    // test_type();
+    // println!("Hello, Rust!");
+    // // test: 打印 99表
+    // multiply();
+    // let tup = (222, "222");
+    // println!("{:?}", reverse_tuple(tup));
+    // test_loop();
+    // println!("{:?}", read_file("src/test_file.txt"));
+    // println!("文件写入：{}", write_file("src/test_file.txt", "\\n你好，Rust"));
+    // println!("文件信息 {}", file_stat("src/test_file.txt"));
+    // println!("测试SFTP");
+    // test_enum();
+    // print_rand();
+    // test_io();
+    // guess_game();
 }
